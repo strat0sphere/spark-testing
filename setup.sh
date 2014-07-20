@@ -1,11 +1,3 @@
-#!/bin/sh
-
-#  create_slaves.sh
-#  
-#
-#  Created by Stratos Dimopoulos on 7/19/14.
-#
-
 #!/bin/bash
 
 # Make sure we are in the spark-ec2 directory
