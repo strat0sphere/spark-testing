@@ -1,6 +1,4 @@
-#!/bin/bash
-
-# Make sure we are in the spark-ec2 directory
+ke sure we are in the spark-ec2 directory
 cd /root/spark-ec2
 
 # Load the environment variables specific to this AMI
@@ -155,3 +153,6 @@ source ./$module/setup.sh
 sleep 1
 cd /root/spark-ec2  # guard against setup.sh changing the cwd
 done
+source ~/spark-testing/persistent-hdfs/setup.sh
+cd /root/spark-ec2  # guard against setup.sh changing the cwd
+sleep 1
