@@ -48,14 +48,15 @@ echo "Setting executable permissions on scripts..."
 find . -regex "^.+.\(sh\|py\)" | xargs chmod a+x
 
 echo "Running setup-slave on master to mount filesystems, etc..."
-source ~/spark-ec2/setup-slave.sh
+source /root/spark-ec2/setup-slave.sh
 
 echo "SSH'ing to master machine(s) to approve key(s)..."
 for master in $MASTERS; do
 echo $master
 ssh $SSH_OPTS $master echo -n &
 sleep 0.3
-ssh -t -t $SSH_OPTS root@$node "echo 'export http_proxy=http://$master:8080' >> ~/.bash_profile" & sleep 0.3
+echo ++++++export http_proxy=http://$master:8080
+ssh -t -t $SSH_OPTS root@$master "echo 'export http_proxy=http://$master:8080' >> ~/.bash_profile" & sleep 0.3
 done
 ssh $SSH_OPTS localhost echo -n &
 ssh $SSH_OPTS `hostname` echo -n &
@@ -99,8 +100,9 @@ wait
 echo "Running slave setup script on other cluster nodes..."
 for node in $SLAVES $OTHER_MASTERS; do
 echo $node
+echo +++++++export http_proxy=http://$node:8080
 ssh -t -t $SSH_OPTS root@$node "echo 'export http_proxy=http://$node:8080' >> ~/.bash_profile" & sleep 0.3
-ssh -t -t $SSH_OPTS root@$node "~/spark-ec2/setup-slave.sh" & sleep 0.3
+ssh -t -t $SSH_OPTS root@$node "/root/spark-ec2/setup-slave.sh" & sleep 0.3
 done
 wait
 
@@ -118,8 +120,8 @@ echo "Setting up Spark on `hostname`..."
 echo "Installing required packages to slave nodes..."
 for node in $SLAVES $OTHER_MASTERS; do
 echo $node
-ssh -t -t $SSH_OPTS root@$node "chmod u+x spark-testing/prepare-slaves-ubuntu.sh" & sleep 0.3
-ssh -t -t $SSH_OPTS root@$node "spark-testing/prepare-slaves-ubuntu.sh" & sleep 0.3
+ssh -t -t $SSH_OPTS root@$node "chmod u+x /root/spark-testing/prepare-slaves-ubuntu.sh" & sleep 0.3
+ssh -t -t $SSH_OPTS root@$node "/root/spark-testing/prepare-slaves-ubuntu.sh" & sleep 0.3
 ssh -t -t $SSH_OPTS root@$node "echo 'export JAVA_HOME=/usr/lib/jvm/java-1.7.0/' >> ~/.bash_profile"
 ssh -t -t $SSH_OPTS root@$node "echo 'export SCALA_HOME=/usr/share/java/' >> ~/.bash_profile"
 ssh -t -t $SSH_OPTS root@$node "source ~/.bash_profile"
@@ -158,6 +160,6 @@ source ./$module/setup.sh
 sleep 1
 cd /root/spark-ec2  # guard against setup.sh changing the cwd
 done
-source ~/spark-testing/persistent-hdfs/setup.sh
+source /root/spark-testing/persistent-hdfs/setup.sh
 cd /root/spark-ec2  # guard against setup.sh changing the cwd
 sleep 1
