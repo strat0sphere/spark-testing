@@ -53,10 +53,9 @@ source ~/spark-ec2/setup-slave.sh
 echo "SSH'ing to master machine(s) to approve key(s)..."
 for master in $MASTERS; do
 echo $master
-master_proxy $master
 ssh $SSH_OPTS $master echo -n &
 sleep 0.3
-ssh -t -t $SSH_OPTS root@$node "echo 'export http_proxy=http://`master_proxy`:8080' >> ~/.bash_profile" & sleep 0.3
+ssh -t -t $SSH_OPTS root@$node "echo 'export http_proxy=http://$master:8080' >> ~/.bash_profile" & sleep 0.3
 done
 ssh $SSH_OPTS localhost echo -n &
 ssh $SSH_OPTS `hostname` echo -n &
@@ -100,8 +99,7 @@ wait
 echo "Running slave setup script on other cluster nodes..."
 for node in $SLAVES $OTHER_MASTERS; do
 echo $node
-http_proxy $node
-ssh -t -t $SSH_OPTS root@$node "echo 'export http_proxy=http://`http_proxy`:8080' >> ~/.bash_profile" & sleep 0.3
+ssh -t -t $SSH_OPTS root@$node "echo 'export http_proxy=http://$node:8080' >> ~/.bash_profile" & sleep 0.3
 ssh -t -t $SSH_OPTS root@$node "~/spark-ec2/setup-slave.sh" & sleep 0.3
 done
 wait
