@@ -46,7 +46,7 @@ echo "Setting executable permissions on scripts..."
 find . -regex "^.+.\(sh\|py\)" | xargs chmod a+x
 
 echo "Running setup-slave on master to mount filesystems, etc..."
-source ./setup-slave.sh
+source ~/spark-ec2/setup-slave.sh
 
 echo "SSH'ing to master machine(s) to approve key(s)..."
 for master in $MASTERS; do
@@ -100,7 +100,7 @@ for node in $SLAVES $OTHER_MASTERS; do
 echo $node
 http_proxy $node
 ssh -t -t $SSH_OPTS root@$node "echo 'export http_proxy=http://`http_proxy`:8080' >> ~/.bash_profile" & sleep 0.3
-ssh -t -t $SSH_OPTS root@$node "spark-ec2/setup-slave.sh" & sleep 0.3
+ssh -t -t $SSH_OPTS root@$node "~/spark-ec2/setup-slave.sh" & sleep 0.3
 done
 wait
 
