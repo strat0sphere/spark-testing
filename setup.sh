@@ -1,4 +1,6 @@
-ke sure we are in the spark-ec2 directory
+#!/bin/bash
+
+# Make sure we are in the spark-ec2 directory
 cd /root/spark-ec2
 
 # Load the environment variables specific to this AMI
