@@ -160,6 +160,7 @@ source ./$module/setup.sh
 sleep 1
 cd /root/spark-ec2  # guard against setup.sh changing the cwd
 done
+echo "Running setup.sh from spark-testing/persistent-hdfs"
 source /root/spark-testing/persistent-hdfs/setup.sh
 cd /root/spark-ec2  # guard against setup.sh changing the cwd
 sleep 1
